@@ -1,77 +1,62 @@
-const cells = document.querySelectorAll('[data-cell]');
-const result = document.querySelector('.result');
-const resetButton = document.getElementById('reset');
+// Initial game state
+let cells = ['', '', '', '', '', '', '', '', ''];
 let currentPlayer = 'X';
-let isGameActive = true;
-
-// Winning combinations
-const winCombos = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
+let result = document.querySelector('.result');
+let btns = document.querySelectorAll('.btn');
+let conditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
 ];
 
-// Event listeners for each cell
-cells.forEach((cell) => {
-  cell.addEventListener('click', cellClickHandler);
-});
+// Function to handle player moves
+const ticTacToe = (element, index) => {
+    if (!element.disabled) return;
 
-// Reset button click event
-resetButton.addEventListener('click', resetGame);
+    element.textContent = currentPlayer;
+    cells[index] = currentPlayer;
+    element.disabled = true;
 
-function cellClickHandler(e) {
-  const cell = e.target;
-  const cellIndex = [...cells].indexOf(cell);
+    // Check for a win
+    for (const condition of conditions) {
+        const [a, b, c] = condition;
+        if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+            result.textContent = `Player ${currentPlayer} wins!`;
+            btns.forEach(btn => (btn.disabled = true));
+            return;
+        }
+    }
 
-  // Check if the cell is already marked or if the game is over
-  if (!isGameActive || cell.classList.contains('X') || cell.classList.contains('O')) {
-    return;
-  }
+    // Check for a draw
+    if (cells.every(cell => cell !== '')) {
+        result.textContent = "It's a draw!";
+        btns.forEach(btn => (btn.disabled = true));
+        return;
+    }
 
-  // Mark the cell with the current player's symbol
-  cell.textContent = currentPlayer;
-  cell.classList.add(currentPlayer);
-
-  // Check for a win
-  if (checkWin()) {
-    result.textContent = `${currentPlayer} wins!`;
-    isGameActive = false;
-  } else if (isBoardFull()) {
-    result.textContent = "It's a draw!";
-    isGameActive = false;
-  } else {
     // Switch to the other player
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-  }
-}
+    result.textContent = `Player ${currentPlayer}'s Turn`;
+};
 
-function checkWin() {
-  return winCombos.some((combo) => {
-    return combo.every((index) => {
-      return cells[index].classList.contains(currentPlayer);
+// Function to reset the game
+const resetGame = () => {
+    cells = ['', '', '', '', '', '', '', '', ''];
+    currentPlayer = 'X';
+    result.textContent = `Player ${currentPlayer}'s Turn`;
+    btns.forEach(btn => {
+        btn.textContent = '';
+        btn.disabled = false;
     });
-  });
-}
+};
 
-function isBoardFull() {
-  return [...cells].every((cell) => {
-    return cell.classList.contains('X') || cell.classList.contains('O');
-  });
-}
+btns.forEach((btn, i) => {
+    btn.addEventListener('click', () => ticTacToe(btn, i));
+});
 
-function resetGame() {
-  cells.forEach((cell) => {
-    cell.textContent = '';
-    cell.classList.remove('X', 'O');
-  });
-
-  result.textContent = '';
-  currentPlayer = 'X';
-  isGameActive = true;
-}
-
+document.querySelector('#reset-button').addEventListener('click', resetGame);
