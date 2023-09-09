@@ -60,7 +60,7 @@ const resetGame = () => {
     cells = ['', '', '', '', '', '', '', '', ''];
     currentPlayer = 'X';
     result.textContent = `Player ${currentPlayer}'s Turn`;
-    btns.forEach(btn => {
+    btns.forEach((btn, i) => {
         btn.textContent = '';
         btn.disabled = false;
     });
