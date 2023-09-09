@@ -13,10 +13,11 @@ let conditions = [
     [0, 4, 8],
     [2, 4, 6]
 ];
+let isGameActive = true;
 
 // Function to handle player moves
 const ticTacToe = (element, index) => {
-    if (!element.disabled) return;
+    if (!isGameActive || cells[index] !== '') return;
 
     element.textContent = currentPlayer;
     cells[index] = currentPlayer;
@@ -27,7 +28,8 @@ const ticTacToe = (element, index) => {
         const [a, b, c] = condition;
         if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
             result.textContent = `Player ${currentPlayer} wins!`;
-            btns.forEach(btn => (btn.disabled = true));
+            isGameActive = false;
+            disableRemainingButtons();
             return;
         }
     }
@@ -35,13 +37,22 @@ const ticTacToe = (element, index) => {
     // Check for a draw
     if (cells.every(cell => cell !== '')) {
         result.textContent = "It's a draw!";
-        btns.forEach(btn => (btn.disabled = true));
+        isGameActive = false;
         return;
     }
 
     // Switch to the other player
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
     result.textContent = `Player ${currentPlayer}'s Turn`;
+};
+
+// Function to disable remaining buttons
+const disableRemainingButtons = () => {
+    btns.forEach(btn => {
+        if (!btn.disabled) {
+            btn.disabled = true;
+        }
+    });
 };
 
 // Function to reset the game
@@ -53,6 +64,7 @@ const resetGame = () => {
         btn.textContent = '';
         btn.disabled = false;
     });
+    isGameActive = true;
 };
 
 btns.forEach((btn, i) => {
