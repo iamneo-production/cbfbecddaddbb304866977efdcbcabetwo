@@ -90,6 +90,8 @@ h1 {
 
 /* Reset Button Styles */
 
+/* Reset Button Styles */
+
 #reset-button {
   border: 2px solid #000;
   border-radius: 5px;
@@ -98,14 +100,15 @@ h1 {
   text-align: center;
   font-size: 18px;
   font-weight: 500;
-  background-color: #000;
-  color: #fff;
+  background-color: #fff; /* Change background color to white */
+  color: #000;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #reset-button:hover {
-  background-color: #fff;
-  color: #000;
+  background-color: #000; /* Change hover background color to black */
+  color: #fff; /* Change hover text color to white */
   cursor: pointer;
 }
+
